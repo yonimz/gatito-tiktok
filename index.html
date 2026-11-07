@@ -1,80 +1,80 @@
 
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        html, body {
-            background: transparent;
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-        #gatito-real {
-            width: 100px;
-            height: 100px;
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            background-image: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnZ3Z3R4Z3ZxZzN4ZzN4ZzN4/3o72F8t9T9268tN/giphy.gif');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            pointer-events: none;
-        }
-    </style>
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+}
+
+#gatito-real {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background-image: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnZ3Z3R4Z3ZxZzN4ZzN4ZzN4/3o72F8t9T9268tN/giphy.gif');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    pointer-events: none;
+}
+</style>
 </head>
+
 <body>
 
-    <div id="gatito-real"></div>
+<div id="gatito-real"></div>
 
-    <script>
-        (() => {
-            const gato = document.getElementById("gatito-real");
+<script>
+(() => {
+    const gato = document.getElementById("gatito-real");
 
-            let x = 0;
-            let direccion = 1;
-            let velocidad = 100;
-            let ultimoTiempo = 0;
+    let x = 0;
+    let direccion = 1;
+    let velocidad = 100;
+    let ultimoTiempo = 0;
 
-            function animar(tiempo) {
-                if (!ultimoTiempo) ultimoTiempo = tiempo;
+    function caminar(tiempo) {
+        if (!ultimoTiempo) ultimoTiempo = tiempo;
 
-                const delta = Math.min((tiempo - ultimoTiempo) / 1000, 0.05);
-                ultimoTiempo = tiempo;
+        const delta = Math.min((tiempo - ultimoTiempo) / 1000, 0.05);
+        ultimoTiempo = tiempo;
 
-                const anchoDisponible = Math.max(
-                    0,
-                    window.innerWidth - gato.offsetWidth
-                );
+        const limite = Math.max(0, window.innerWidth - gato.offsetWidth);
 
-                x += direccion * velocidad * delta;
+        x += direccion * velocidad * delta;
 
-                if (x >= anchoDisponible) {
-                    x = anchoDisponible;
-                    direccion = -1;
-                }
+        if (x >= limite) {
+            x = limite;
+            direccion = -1;
+        }
 
-                if (x <= 0) {
-                    x = 0;
-                    direccion = 1;
-                }
+        if (x <= 0) {
+            x = 0;
+            direccion = 1;
+        }
 
-                gato.style.left = x + "px";
-                gato.style.transform =
-                    `translateY(-50%) scaleX(${direccion === 1 ? 1 : -1})`;
+        gato.style.left = x + "px";
+        gato.style.transform =
+            `translateY(-50%) scaleX(${direccion})`;
 
-                requestAnimationFrame(animar);
-            }
+        requestAnimationFrame(caminar);
+    }
 
-            requestAnimationFrame(animar);
-        })();
-    </script>
+    requestAnimationFrame(caminar);
+})();
+</script>
 
 </body>
 </html>
