@@ -1,62 +1,116 @@
 
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <style>
 html, body {
     margin: 0;
-    padding: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
     background: transparent;
 }
 
-#gatito-real {
+#gatito {
     position: absolute;
-    width: 100px;
+    width: 110px;
     height: 100px;
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    background-image: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnZ3Z3R4Z3ZxZzN4ZzN4ZzN4/3o72F8t9T9268tN/giphy.gif');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
     pointer-events: none;
+}
+
+#gatito svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.pata {
+    transform-box: fill-box;
+    transform-origin: top center;
+    animation: caminar .22s infinite alternate ease-in-out;
+}
+
+.pata2 {
+    animation-delay: .22s;
+}
+
+@keyframes caminar {
+    from { transform: rotate(-18deg); }
+    to { transform: rotate(18deg); }
 }
 </style>
 </head>
-
 <body>
 
-<div id="gatito-real"></div>
+<div id="gatito">
+<svg viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- Cola -->
+    <path d="M22 65 Q2 55 10 35 Q15 22 23 32"
+          fill="none" stroke="#777777" stroke-width="9"
+          stroke-linecap="round"/>
+
+    <!-- Cuerpo -->
+    <ellipse cx="59" cy="67" rx="37" ry="23" fill="#888888"/>
+
+    <!-- Patas traseras -->
+    <g class="pata">
+        <ellipse cx="39" cy="83" rx="8" ry="12" fill="#686868"/>
+    </g>
+    <g class="pata pata2">
+        <ellipse cx="75" cy="83" rx="8" ry="12" fill="#686868"/>
+    </g>
+
+    <!-- Cabeza -->
+    <circle cx="83" cy="36" r="25" fill="#999999"/>
+
+    <!-- Orejas -->
+    <path d="M62 22 L64 2 L78 17 Z" fill="#888888"/>
+    <path d="M88 16 L105 3 L105 27 Z" fill="#888888"/>
+    <path d="M67 16 L67 9 L73 17 Z" fill="#e9a4ae"/>
+    <path d="M94 17 L102 9 L101 21 Z" fill="#e9a4ae"/>
+
+    <!-- Ojos verdes -->
+    <ellipse cx="75" cy="36" rx="4" ry="7" fill="#7cff62"/>
+    <ellipse cx="94" cy="36" rx="4" ry="7" fill="#7cff62"/>
+    <ellipse cx="75" cy="36" rx="1.5" ry="5" fill="#202020"/>
+    <ellipse cx="94" cy="36" rx="1.5" ry="5" fill="#202020"/>
+
+    <!-- Hocico -->
+    <path d="M82 45 L86 45 L84 49 Z" fill="#e58b9c"/>
+    <path d="M84 49 Q79 54 76 50 M84 49 Q89 54 92 50"
+          fill="none" stroke="#444444" stroke-width="1.5"
+          stroke-linecap="round"/>
+
+    <!-- Bigotes -->
+    <g stroke="#eeeeee" stroke-width="1.3" stroke-linecap="round">
+        <path d="M70 47 L55 44 M70 51 L55 53"/>
+        <path d="M96 47 L110 44 M96 51 L110 53"/>
+    </g>
+</svg>
+</div>
 
 <script>
 (() => {
-    const gato = document.getElementById("gatito-real");
-
+    const gato = document.getElementById("gatito");
     let x = 0;
     let direccion = 1;
-    let velocidad = 100;
-    let ultimoTiempo = 0;
+    let anterior = 0;
 
-    function caminar(tiempo) {
-        if (!ultimoTiempo) ultimoTiempo = tiempo;
+    function mover(tiempo) {
+        if (!anterior) anterior = tiempo;
+        const delta = Math.min((tiempo - anterior) / 1000, 0.05);
+        anterior = tiempo;
 
-        const delta = Math.min((tiempo - ultimoTiempo) / 1000, 0.05);
-        ultimoTiempo = tiempo;
+        const maximo = Math.max(0, window.innerWidth - gato.offsetWidth);
+        x += direccion * 85 * delta;
 
-        const limite = Math.max(0, window.innerWidth - gato.offsetWidth);
-
-        x += direccion * velocidad * delta;
-
-        if (x >= limite) {
-            x = limite;
+        if (x >= maximo) {
+            x = maximo;
             direccion = -1;
         }
 
@@ -69,10 +123,10 @@ html, body {
         gato.style.transform =
             `translateY(-50%) scaleX(${direccion})`;
 
-        requestAnimationFrame(caminar);
+        requestAnimationFrame(mover);
     }
 
-    requestAnimationFrame(caminar);
+    requestAnimationFrame(mover);
 })();
 </script>
 
